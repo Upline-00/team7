@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render
 # chatbotapp/views.py
 from django.shortcuts import render
@@ -6,7 +7,7 @@ import openai
 
 from chatbotapp.models import Conversation
 
-openai.api_key = "YOUR_OPENAI_API_KEY"
+openai.api_key = settings.OPENAI_API_KEY
 
 
 from django.shortcuts import render
@@ -20,7 +21,6 @@ def chat_view(request):
 
         # ChatGPT 모델로부터 예측된 대화 내용을 받아오는 함수
         def generate_response(prompt):
-            openai.api_key = 'OPENAI_API_KEY'
 
             response = openai.Completion.create(
                 engine="gpt-3.5-turbo",

@@ -4,8 +4,8 @@
 {% block content %}
 <style>
     .link-main {
-        width: 700px;
-        margin: 1rem 4rem;
+        width: 48%;
+        margin: 1rem 0.5rem;
         display: inline-block;
 
     }
@@ -21,7 +21,7 @@
         position: relative;
         background-color: #a6c8de;
         border-radius: 1rem;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .link-card-bg {
@@ -113,7 +113,7 @@
                 </div>
             </a>
         </div>
-        <div>
+        <div class="link-card">
             {% if article_list %}
                 {% for article in article_list %}
                     <a href="{% url 'articleapp:detail' pk=article.pk %}" class="board-card">
@@ -139,18 +139,20 @@
                 </div>
             </a>
         </div>
-        {% if ask_list %}
-            {% for ask in ask_list %}
-                <a href="{% url 'askapp:detail' pk=ask.pk %}" class="board-card">
-                    <div class="board-card-bg"></div>
-                    <div class="board-content">
-                        <div class="board-title">{{ ask.title }}</div>
-                    </div>
-                </a>
-            {% empty %}
-                <div class="no-boards">No Asks Yet!</div>
-            {% endfor %}
-        {% endif %}
+        <div class="link-card">
+            {% if ask_list %}
+                {% for ask in ask_list %}
+                    <a href="{% url 'askapp:detail' pk=ask.pk %}" class="board-card">
+                        <div class="board-card-bg"></div>
+                        <div class="board-content">
+                            <div class="board-title">{{ ask.title }}</div>
+                        </div>
+                    </a>
+                {% empty %}
+                    <div class="no-boards">No Asks Yet!</div>
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
 </div>
 

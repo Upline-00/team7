@@ -34,7 +34,7 @@ urlpatterns = [
     path('articles/', include('articleapp.urls')),
     path('comments/', include('commentapp.urls')),
     path('asks/', include('askapp.urls')),
-    path('chatbot/', include('chatbotapp.urls')),
+    path('chat/', include('chatbotapp.urls')),
 
 
 ]+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
