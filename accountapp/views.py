@@ -60,3 +60,14 @@ class AccountDeleteView(DeleteView):
     context_object_name = 'target_user'
     success_url = reverse_lazy('accountapp:login')
     template_name = 'accountapp/delete.html'
+
+
+from django.shortcuts import render
+from articleapp.models import Article
+from askapp.models import Question
+
+def hello_world(request):
+    articles = Article.objects.all()  # 또는 다른 적절한 쿼리
+    questions = Question.objects.all()  # 또는 다른 적절한 쿼리
+    return render(request, 'accountapp/hello_world.html', {'articles': articles, 'questions': questions})
+

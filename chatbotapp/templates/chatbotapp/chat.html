@@ -3,46 +3,84 @@
 
 {% block content %}
 <head>
-    <title>Chat with ChatGPT</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with AI</title>
+    <style>
+        h1{
+            font-weight: bolder;
+        }
+        #user-input{
+            margin: 20px;
+            position: relative;
+            border: none;
+            display: inline-block;
+            padding: 15px 50px;
+            border-radius: 15px;
+            font-family: "paybooc-Light", sans-serif;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.25s;
+            background-color: #ffffff;
+        }
+        #send-btn{
+            margin: 20px;
+            position: relative;
+            border: none;
+            display: inline-block;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-family: "paybooc-Light", sans-serif;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.25s;
+            background-color: #a6c8de;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Chat with ChatGPT</h1>
-    <div id="chat-container">
-        <div id="chat-history"></div>
-        <input type="text" id="user-input">
-        <button id="send-btn">Send</button>
+    <div class="container-container">
+        <h1>Chat with AI</h1>
+        <div id="chat-history">
+            <!-- 대화 내용을 여기에 표시할 예정 -->
+        </div>
+        <div>
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button id="send-button">Send</button>
+        </div>
     </div>
 
     <script>
-        const chatHistoryElement = document.getElementById("chat-history");
-        const userInputElement = document.getElementById("user-input");
-        const sendButton = document.getElementById("send-btn");
+        const chatHistory = document.getElementById('chat-history');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
 
-        sendButton.addEventListener("click", async () => {
-            const userMessage = userInputElement.value;
-            userInputElement.value = "";
+        sendButton.addEventListener('click', async () => {
+            const userMessage = userInput.value;
+            if (userMessage.trim() === '') return;
 
-            const chatHistory = chatHistoryElement.innerHTML;
-            const response = await fetch("/chatbotapp/chat/", {
-                method: "POST",
+            chatHistory.innerHTML += `<p>You: ${userMessage}</p>`;
+
+            const response = await fetch('/chatbotapp/chat/', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "X-CSRFToken": getCookie("csrftoken")
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'
                 },
-                body: `user_input=${encodeURIComponent(userMessage)}&chat_history=${encodeURIComponent(chatHistory)}`
+                body: `user_input=${encodeURIComponent(userMessage)}&chat_history=${encodeURIComponent(chatHistory.innerHTML)}`
             });
 
-            const responseData = await response.json();
-            const botResponse = responseData.bot_response;
+            const data = await response.json();
+            const botResponse = data.bot_response;
 
-            chatHistoryElement.innerHTML = `${chatHistory}User: ${userMessage}<br>ChatGPT: ${botResponse}<br>`;
+            chatHistory.innerHTML += `<p>ChatGPT: ${botResponse}</p>`;
+
+            userInput.value = '';
         });
-
-        function getCookie(name) {
-            var value = "; " + document.cookie;
-            var parts = value.split("; " + name + "=");
-            if (parts.length === 2) return parts.pop().split(";").shift();
-        }
     </script>
+</body>
 {% endblock %}
 

@@ -4,8 +4,10 @@
 {% block content %}
 <style>
     .link-main {
-        width: 100%;
-        margin: 1rem 1rem;
+        width: 700px;
+        margin: 1rem 4rem;
+        display: inline-block;
+
     }
     .link-container {
         display: flex;
@@ -17,9 +19,9 @@
     .link-card {
         width: 48%;
         position: relative;
-        background-color: #23272b;
+        background-color: #a6c8de;
         border-radius: 1rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
     }
 
     .link-card-bg {
@@ -42,11 +44,11 @@
     .link-title {
         font-weight: bolder;
         font-size: 1.25rem;
-        color: #ffffff;
+        color: #232323;
     }
 
     a{
-        color: #ffffff;
+        color: #232323;
         text-decoration-line: none;
     }
 
@@ -56,15 +58,12 @@
 
     .link-card:hover .link-title,
     .link-card:hover .link-description {
-        color: #cccee1;
+        color: #000000;
     }
 
-    .board-container {
-        width: 100%;
-    }
 
     .board-card {
-        width: 100%;
+        width: 48%;
         position: relative;
         background-color: #a7b9f4;
         border-radius: 1rem;
@@ -78,7 +77,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
+        width: 48%;
         height: 100%;
         background-image: url('pattern.svg');
         background-size: cover;
@@ -90,6 +89,7 @@
 
     .board-content {
         padding: 1rem;
+        width: 48%;
     }
 
     .board-title {
@@ -102,39 +102,43 @@
         margin-top: 1rem;
     }
 </style>
-<div class="link-main">
-    <div class="link-container">
-        <a class="link-card" href="{% url 'articleapp:list' %}?next={{ request.path }}">
-            <div class="link-card-bg"></div>
-            <div class="link-content">
-                <div class="link-title">커뮤니티</div>
-                <p>다양한 사람들과 의견을 나눠보세요!</p>
-            </div>
-        </a>
+<div>
+    <div class="link-main">
+        <div class="link-container">
+            <a class="link-card" href="{% url 'articleapp:list' %}?next={{ request.path }}">
+                <div class="link-card-bg"></div>
+                <div class="link-content">
+                    <div class="link-title">커뮤니티</div>
+                    <p>다양한 사람들과 의견을 나눠보세요!</p>
+                </div>
+            </a>
+        </div>
+        <div>
+            {% if article_list %}
+                {% for article in article_list %}
+                    <a href="{% url 'articleapp:detail' pk=article.pk %}" class="board-card">
+                        <div class="board-card-bg"></div>
+                        <div class="board-content">
+                            <div class="board-title">{{ article.title }}</div>
+                        </div>
+                    </a>
+                {% empty %}
+                    <div class="no-boards">No Articles Yet!</div>
+                {% endfor %}
+            {% endif %}
+        </div>
 
-        <a class="link-card" href="{% url 'askapp:list' %}?next={{ request.path }}">
-            <div class="link-card-bg"></div>
-            <div class="link-content">
-                <div class="link-title">Q&A</div>
-                <p>다양한 사람들과 의견을 나눠보세요!</p>
-            </div>
-        </a>
     </div>
-
-    <div class="board-container">
-        {% if article_list %}
-            {% for article in article_list %}
-                <a href="{% url 'articleapp:detail' pk=article.pk %}" class="board-card">
-                    <div class="board-card-bg"></div>
-                    <div class="board-content">
-                        <div class="board-title">{{ article.title }}</div>
-                    </div>
-                </a>
-            {% empty %}
-                <div class="no-boards">No Articles Yet!</div>
-            {% endfor %}
-        {% endif %}
-
+    <div class="link-main">
+        <div class="link-container">
+            <a class="link-card" href="{% url 'askapp:list' %}?next={{ request.path }}">
+                <div class="link-card-bg"></div>
+                <div class="link-content">
+                    <div class="link-title">Q&A</div>
+                    <p>다양한 사람들과 의견을 나눠보세요!</p>
+                </div>
+            </a>
+        </div>
         {% if ask_list %}
             {% for ask in ask_list %}
                 <a href="{% url 'askapp:detail' pk=ask.pk %}" class="board-card">
@@ -151,4 +155,6 @@
 </div>
 
 {% endblock %}
+
+
 

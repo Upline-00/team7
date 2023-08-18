@@ -4,20 +4,37 @@ from django.shortcuts import render
 from django.http import JsonResponse
 import openai
 
+from chatbotapp.models import Conversation
+
 openai.api_key = "YOUR_OPENAI_API_KEY"
 
+
+from django.shortcuts import render
+from django.http import JsonResponse
+import openai
 
 def chat_view(request):
     if request.method == "POST":
         user_input = request.POST.get("user_input")
         chat_history = request.POST.get("chat_history", "")
 
-        prompt = f"{chat_history}User: {user_input}\nChatGPT:"
-        bot_response = generate_response(prompt)
+        # ChatGPT 모델로부터 예측된 대화 내용을 받아오는 함수
+        def generate_response(prompt):
+            openai.api_key = 'OPENAI_API_KEY'
 
-        # 대화 내용 저장 (실제로는 데이터베이스에 저장하는 코드로 변경 필요)
-        save_conversation(user_input, bot_response)
+            response = openai.Completion.create(
+                engine="gpt-3.5-turbo",
+                prompt=prompt,
+                max_tokens=50
+            )
 
-        return JsonResponse({"bot_response": bot_response})
+            return response.choices[0].text.strip()
 
-    return render(request, "chatbotapp/chat.html")  # chat.html 템플릿 생성 필요
+        bot_response = generate_response(f"{chat_history}\nUser: {user_input}")
+        conversation = Conversation(user_input=user_input, content=bot_response)
+        conversation.save()
+
+        return JsonResponse({"bot_response": bot_response, "chat_history": chat_history})
+
+    return render(request, "chatbotapp/chat.html")
+
