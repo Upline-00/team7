@@ -19,12 +19,14 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from accountapp.views import hello_world
 from articleapp.views import ArticleListView
-from chatbotapp.views import chatbot
+from chatbotapp.views import chat_view
+from django.conf.urls.static import static
 
 urlpatterns = [
 
-    path('', ArticleListView.as_view(), name='home'),
+    path('', hello_world, name='home'),
 
     path('admin/', admin.site.urls),
     path('accounts/', include('accountapp.urls')),
@@ -32,7 +34,10 @@ urlpatterns = [
     path('articles/', include('articleapp.urls')),
     path('comments/', include('commentapp.urls')),
     path('asks/', include('askapp.urls')),
-    path('chatbot/', include('chatbotapp.urls')),
+    path('chatbots/', include('chatbotapp.urls')),
 
 
 ]+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

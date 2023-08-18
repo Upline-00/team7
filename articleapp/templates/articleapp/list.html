@@ -4,27 +4,30 @@
 {% block content %}
 <style>
     .article-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        display: inline-block;
+        justify-content: space-between;
         gap: 20px;
-        justify-items: center;
         margin: 20px auto;
         padding: 0 20px;
     }
     .article-card {
+        flex: 1;
         border: 1px solid #ddd;
         border-radius: 1rem;
-        padding: 1rem;
+        margin: 5rem;
         background-color: #f8f9fa;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        padding-left: 6rem;
+        padding-right: 6rem;
+        align-items: center;
+
+
     }
     .article-card:hover {
         transform: translateY(-5px);
-    }
-    .article-img {
-        width: 100%;
-        border-radius: 1rem;
     }
     .no-articles {
         text-align: center;
@@ -46,24 +49,36 @@
     .create-article-btn:hover {
         background-color: #23272b;
     }
+    .in{
+        display: inline;
+        color: #23272b;
+        text-decoration-line: none;
+        padding: 2rem;
+    }
+    .CAbtn{
+        text-align: center;
+    }
 </style>
 
 <div class="article-container">
     {% if article_list %}
         {% for article in article_list %}
-            <a href="{% url 'articleapp:detail' pk=article.pk %}" class="article-card">
-                <img src="{{ article.image.url }}" alt="{{ article.title }}" class="article-img">
-                <h3>{{ article.title }}</h3>
-            </a>
+            <div class="article-card">
+                <a href="{% url 'articleapp:detail' pk=article.pk %}">
+                    <h3 class="in">{{ article.title }}</h3>
+                    <p class="in">{{ article.writer }}</p>
+                    <p class="in">{{ article.created_at }}</p>
+                </a>
+            </div>
         {% endfor %}
     {% else %}
         <div class="no-articles">No Articles Yet!</div>
     {% endif %}
-</div>
-
-<div style="text-align: center;">
-    <a href="{% url 'articleapp:create' %}" class="create-article-btn">Create Article</a>
+    <div class="CAbtn">
+        <a href="{% url 'articleapp:create' %}" class="create-article-btn">Create Article</a>
+    </div>
 </div>
 
 {% include 'snippets/pagination.html' with page_obj=page_obj %}
 {% endblock %}
+

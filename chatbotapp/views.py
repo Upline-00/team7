@@ -1,39 +1,23 @@
 from django.shortcuts import render
-
-# Create your views here.
-import os
-import requests
+# chatbotapp/views.py
 from django.shortcuts import render
 from django.http import JsonResponse
+import openai
+
+openai.api_key = "YOUR_OPENAI_API_KEY"
 
 
-def chatbot(request):
-    if request.method == 'POST':
-        user_input = request.POST.get('user_input', '')
+def chat_view(request):
+    if request.method == "POST":
+        user_input = request.POST.get("user_input")
+        chat_history = request.POST.get("chat_history", "")
 
-        if user_input:
-            openai_api_key = os.environ.get('OPENAI_API_KEY')  # OpenAI API 키
+        prompt = f"{chat_history}User: {user_input}\nChatGPT:"
+        bot_response = generate_response(prompt)
 
-            headers = {
-                'Content-Type': 'application/json',
-                'Authorization': f'Bearer {openai_api_key}',
-            }
+        # 대화 내용 저장 (실제로는 데이터베이스에 저장하는 코드로 변경 필요)
+        save_conversation(user_input, bot_response)
 
-            data = {
-                'prompt': user_input,
-                'max_tokens': 50,
-            }
+        return JsonResponse({"bot_response": bot_response})
 
-            response = requests.post(
-                'https://api.openai.com/v1/engines/davinci-codex/completions',
-                json=data,
-                headers=headers
-            )
-
-            if response.status_code == 200:
-                chat_response = response.json()['choices'][0]['text']
-                return JsonResponse({'response': chat_response})
-            else:
-                return JsonResponse({'response': 'Error communicating with the chatbot.'})
-
-    return render(request, 'chatbot.html')
+    return render(request, "chatbotapp/chat.html")  # chat.html 템플릿 생성 필요

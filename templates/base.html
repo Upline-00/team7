@@ -9,9 +9,24 @@
 
         <br>
 
-        {% block content %}
+        <div style="display: flex; justify-content: space-between; gap: 2.5rem;">
+            <div style="flex: 1;">
+                <!-- 첫 번째 칸, 3/5 크기 -->
+                {% block content_1 %}
+                {% endblock %}
+            </div>
+            <div style="flex: 3;">
+                <!-- 두 번째 칸, 1/5 크기 -->
+                {% block content %}
+                {% endblock %}
+            </div>
+            <div style="flex: 1;">
+                <!-- 세 번째 칸, 1/5 크기 -->
+                {% block content_3 %}
+                {% endblock %}
+        </div>
+    </div>
 
-        {% endblock %}
 
          <hr>
 

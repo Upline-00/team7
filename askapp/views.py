@@ -1,23 +1,30 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView
 from .models import Question
-from .forms import QuestionForm
+from django.shortcuts import render
 
-@login_required
-def askwrite(request):
-    if request.method == 'POST':
-        form = QuestionForm(request.POST)
-        if form.is_valid():
-            question = form.save(commit=False)
-            question.author = request.user
-            question.save()
-            return redirect('askapp:asklist')
-    else:
-        form = QuestionForm()
-    return render(request, 'askapp/write.html', {'form': form})
+class QuestionListView(ListView):
+    model = Question
+    template_name = 'askapp/list.html'
+    context_object_name = 'questions'
+    ordering = ['-created_at']
 
-def asklist(request):
-    questions = Question.objects.all()
-    return render(request, 'askapp/list.html', {'questions': questions})
+class QuestionCreateView(LoginRequiredMixin, CreateView):
+    model = Question
+    template_name = 'askapp/write.html'
+    fields = ['title', 'content']
+    success_url = reverse_lazy('askapp:list')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+
+def detail_view(request, question_pk):
+    question = Question.objects.get(pk=question_pk)
+    return render(request, 'askapp/detail.html', {'question': question})
+
 
 
